@@ -45,3 +45,6 @@ app.include_router(documents.router)
 @app.get("/health")
 async def health():
     return {"status": "ok", "service": "officina-fastapi", "version": "0.2.0"}
+
+
+

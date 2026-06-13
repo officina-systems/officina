@@ -6,8 +6,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str = ""
 
     # Vertex AI (primario — inferencia + embeddings)
-    VERTEX_SA_JSON_PATH: str = "secrets/vertex-service-account.json"
-    VERTEX_PROJECT_ID: str = ""
+    VERTEX_SA_JSON_PATH: str = "secrets/my-project-1-498507-f9afb01caaa5.json"
+    VERTEX_PROJECT_ID: str = "my-project-1-498507"
     VERTEX_LOCATION: str = "us-central1"
     VERTEX_INFERENCE_MODEL: str = "gemini-2.5-flash"
     VERTEX_EMBED_MODEL: str = "gemini-embedding-001"
@@ -37,3 +37,4 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+

@@ -45,7 +45,7 @@ services:
       DATABASE_URL: postgresql://officina:${POSTGRES_PASSWORD}@postgres:5432/officina
       OLLAMA_URL: http://ollama:11434
       OPENCODE_URL: http://opencode:3100
-      GOOGLE_APPLICATION_CREDENTIALS: /app/secrets/vertex-service-account.json
+      GOOGLE_APPLICATION_CREDENTIALS: /app/secrets/my-project-1-498507-f9afb01caaa5.json
       API_KEY: ${FASTAPI_API_KEY}
     networks:
       - officina_default

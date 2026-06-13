@@ -43,10 +43,10 @@ The next development step is not to invent a separate artificial package, but to
 5. Establish a small coding workflow that can be tested with Codex.
 6. Document which tasks require premium models and which can use local or low-cost alternatives.
 
-## Relationship to `officina`
+## Relationship to `officina-runtime-core`
 
 A clean runtime-core component is being prepared separately at:
 
-https://github.com/officina-systems/officina
+https://github.com/pierangelopirro/officina-runtime-core
 
 That repository is intended to become a reusable extraction of the runtime concepts developed inside the broader OFFICINA framework.

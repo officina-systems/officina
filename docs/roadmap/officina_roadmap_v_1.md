@@ -452,3 +452,5 @@ Capacidades avanzadas evaluadas bajo:
 - utilidad operacional real;
 - complejidad incremental aceptable;
 - y compatibilidad con la filosofía central de Officina.
+
+

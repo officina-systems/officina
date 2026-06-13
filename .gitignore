@@ -1,38 +1,55 @@
-
-# dependencies
-node_modules/
-react/node_modules/
-mcp/postgres/.venv/
-.venv/
-__pycache__/
-
-# secrets and env
-.env
-.env.*
-!.env.example
-secrets/
-*.key
-*.pem
-*.p12
-*cred*.json
-*credential*.json
-*service-account*.json
-*vertex*.json
-
-# runtime/private data
+# Runtime data — nunca en repo
 data/
-cognition/
-google-cloud-sdk/
-.opencode/
-react-skeleton-bak/
+secrets/
+*.env
+!.env.example
 
-# build/cache
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+*.egg-info/
 dist/
 build/
-.cache/
-.pytest_cache/
-.DS_Store
 
-# binaries/local artifacts
-*.exe
-phase-*.txt
+# Node
+node_modules/
+dist/
+.next/
+package-lock.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Backups locales
+backups/
+
+# MCP venvs
+mcp/*/.venv/
+
+# OpenCode runtime (SQLite, logs, repos — buffer temporal)
+.opencode/data/
+
+# Node root (opencode instalado localmente)
+package-lock.json
+package.json
+
+
+# Private operational cognition
+cognition/*
+!cognition/bitacora/
+!cognition/bitacora/*.md
+
+
+# Local Google Cloud SDK
+google-cloud-sdk/
+
+# Local backups
+react-skeleton-bak/
