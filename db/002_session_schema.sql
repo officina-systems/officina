@@ -1,0 +1,3 @@
+-- 002_session_schema.sql
+-- Schema session.* (workspaces, folders, conversations, messages, documents)
+-- PENDIENTE: escribir en S32

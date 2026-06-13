@@ -1,0 +1,2 @@
+-- 003_bootstrap_nodes.sql
+-- PLACEHOLDER — contenido canónico en GitHub src/db/schemas/003_bootstrap_nodes.sql

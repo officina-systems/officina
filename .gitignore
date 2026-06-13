@@ -1,0 +1,38 @@
+
+# dependencies
+node_modules/
+react/node_modules/
+mcp/postgres/.venv/
+.venv/
+__pycache__/
+
+# secrets and env
+.env
+.env.*
+!.env.example
+secrets/
+*.key
+*.pem
+*.p12
+*cred*.json
+*credential*.json
+*service-account*.json
+*vertex*.json
+
+# runtime/private data
+data/
+cognition/
+google-cloud-sdk/
+.opencode/
+react-skeleton-bak/
+
+# build/cache
+dist/
+build/
+.cache/
+.pytest_cache/
+.DS_Store
+
+# binaries/local artifacts
+*.exe
+phase-*.txt

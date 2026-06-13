@@ -1,0 +1,3 @@
+-- 001_initial_schema.sql
+-- PLACEHOLDER — contenido canónico en GitHub src/db/schemas/001_initial_schema.sql
+-- Ejecutar: git pull para obtener versión real

@@ -1,0 +1,85 @@
+services:
+
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: officina-postgres
+    environment:
+      POSTGRES_USER: officina
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: officina
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    networks:
+      - officina_default
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama
+    container_name: officina-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./data/ollama:/root/.ollama
+    networks:
+      - officina_default
+    restart: unless-stopped
+
+  fastapi:
+    build: ./fastapi
+    container_name: officina-fastapi
+    depends_on:
+      - postgres
+      - ollama
+    ports:
+      - "8000:8000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./secrets:/app/secrets:ro
+      - ./data/uploads:/app/uploads
+      - ./data/watch:/app/watch:ro
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://officina:${POSTGRES_PASSWORD}@postgres:5432/officina
+      OLLAMA_URL: http://ollama:11434
+      OPENCODE_URL: http://opencode:3100
+      GOOGLE_APPLICATION_CREDENTIALS: /app/secrets/vertex-service-account.json
+      API_KEY: ${FASTAPI_API_KEY}
+    networks:
+      - officina_default
+    restart: unless-stopped
+
+  opencode:
+    build: ./opencode
+    container_name: officina-opencode
+    depends_on:
+      - fastapi
+    ports:
+      - "3100:3100"
+    volumes:
+      # workspace :rw -- opencode modifica archivos del repo
+      - ./:/workspace:rw
+    environment:
+      XDG_CONFIG_HOME: /workspace/.opencode/config
+      XDG_DATA_HOME: /workspace/.opencode/data
+      OPENAI_API_KEY: ${FASTAPI_API_KEY}
+    networks:
+      - officina_default
+    restart: unless-stopped
+
+  react:
+    build: ./react
+    container_name: officina-react
+    depends_on:
+      - fastapi
+    ports:
+      - "80:80"
+    networks:
+      - officina_default
+    restart: unless-stopped
+
+networks:
+  officina_default:
+    driver: bridge

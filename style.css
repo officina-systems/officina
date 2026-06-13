@@ -1,0 +1,2 @@
+
+.open-side-btn.on{color:var(--oro)}.open-side-btn svg{transition:transform .3s ease,color .15s}.open-side-btn.on svg{transform:rotate(180deg)}
