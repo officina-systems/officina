@@ -153,10 +153,12 @@ export default function App() {
         {/* Header */}
         <header className="app-header">
           <div style={{ display:'flex', alignItems:'center', gap:8, minWidth:0 }}>
-            {!sideOpen && (
-              <button className="hdr-btn" onClick={() => setSideOpen(true)}
-                aria-label="abrir sidebar" title="Ctrl+B">{Ico.menu}</button>
-            )}
+            <button className={'hdr-btn' + (sideOpen ? ' active' : '')} onClick={() => setSideOpen(s => !s)}
+              aria-label={sideOpen ? 'cerrar sidebar' : 'abrir sidebar'} title="Ctrl+B">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <path d={sideOpen ? 'M15 18l-6-6 6-6' : 'M9 18l6-6-6-6'} />
+              </svg>
+            </button>
             {editCtx ? (
               <div className="edit-banner">
                 <span>✎ Editando · {editCtx.entity?.name ?? editCtx.entity?.title ?? editCtx.kind}</span>
