@@ -1,15 +1,8 @@
 # OFFICINA — Demo UI
 
-Interfaz demostrativa del runtime OFFICINA. **Datos ficticios, sin backend real.**
-
-## Cómo abrir
+Interfaz demostrativa. Datos ficticios, sin backend real.
+Instalable como app: Safari (iOS) → Compartir → Agregar a inicio. Chrome (Android) → Instalar.
 
 ```bash
 npx serve .
 ```
-
-Abrir `http://localhost:3000`.
-
-## Qué NO contiene
-
-Backend, base de datos, secretos, API keys, llamadas reales a modelos o proveedores.

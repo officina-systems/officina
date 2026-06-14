@@ -7,6 +7,7 @@ import { selectMessages, selectPath, selectUser,
          selectMirrorNode, appendMessage, createConversation,
          deactivateEntity, updateMirrorFD } from './data/selectors';
 import { openTurn } from './data/turn';
+import { useI18n } from './data/i18n';
 
 const Ico = {
   search: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>,
@@ -25,6 +26,9 @@ export default function App() {
   const [toast, setToast]         = useState(null);
   const [editCtx, setEditCtx]     = useState(null);
   const [seedText, setSeed]       = useState('');
+  const [lang, setLang]           = useState('es');
+  const [dark, setDark]           = useState(true);
+  const t = useI18n(lang);
   const [, forceRender]           = useState(0);
   const refresh   = useCallback(() => forceRender(n => n+1), []);
   const turnRef   = useRef(null);
@@ -138,31 +142,41 @@ export default function App() {
       showToast(`Editando ${ctx.entity?.name ?? ctx.entity?.title ?? 'nuevo'}: escribe instrucciones o "desactiva".`);
   };
 
+  const isMobile = () => window.innerWidth <= 768;
+
   const folderId = path.find(p => p.workspace_id)?.id;
 
   return (
-    <div className="app">
-      <Sidebar open={sideOpen} activeConvId={activeConvId} user={user}
-        onOpenConversation={id => { setActiveConvId(id); setEditCtx(null); }}
-        onNewChat={() => { setActiveConvId(null); setEditCtx(null); setTurn(emptyTurn); }}
+    <div className={'app' + (sideOpen ? ' side-open' : '') + (kbOpen ? ' kb-open' : '')}>
+      <Sidebar open={sideOpen} activeConvId={activeConvId} user={user} t={t}
+        lang={lang} dark={dark}
+        onOpenConversation={id => { setActiveConvId(id); setEditCtx(null); if (isMobile()) setSideOpen(false); }}
+        onNewChat={() => { setActiveConvId(null); setEditCtx(null); setTurn(emptyTurn); if (isMobile()) setSideOpen(false); }}
         onEditContext={startEdit}
-        onToggleTheme={() => document.body.classList.toggle('light')}
+        onToggleTheme={() => { document.body.classList.toggle('light'); setDark(d => !d); }}
+        onToggleLang={() => setLang(l => l === 'es' ? 'en' : 'es')}
+        onToggle={() => setSideOpen(s => !s)}
         onRefreshed={refresh} />
+
+      {/* Backdrop — cierra sidebar o KB al tocar fuera en móvil */}
+      {(sideOpen || kbOpen) && (
+        <div className="mobile-backdrop" onClick={() => { setSideOpen(false); setKbOpen(false); }} />
+      )}
 
       <main className="app-main">
         {/* Header */}
         <header className="app-header">
           <div style={{ display:'flex', alignItems:'center', gap:8, minWidth:0 }}>
             <button className={'hdr-btn' + (sideOpen ? ' active' : '')} onClick={() => setSideOpen(s => !s)}
-              aria-label={sideOpen ? 'cerrar sidebar' : 'abrir sidebar'} title="Ctrl+B">
+              aria-label={sideOpen ? t.closeSidebar : t.openSidebar} title="Ctrl+B">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                 <path d={sideOpen ? 'M15 18l-6-6 6-6' : 'M9 18l6-6-6-6'} />
               </svg>
             </button>
             {editCtx ? (
               <div className="edit-banner">
-                <span>✎ Editando · {editCtx.entity?.name ?? editCtx.entity?.title ?? editCtx.kind}</span>
-                <button onClick={() => setEditCtx(null)} aria-label="salir">✕</button>
+                <span>✎ {t.editing} {editCtx.entity?.name ?? editCtx.entity?.title ?? editCtx.kind}</span>
+                <button onClick={() => setEditCtx(null)} aria-label={t.cancel}>✕</button>
               </div>
             ) : path.length ? (
               <nav className="breadcrumb" aria-label="ruta">
@@ -177,32 +191,32 @@ export default function App() {
                 ))}
               </nav>
             ) : (
-              <span style={{ fontSize:13, color:'var(--oro)' }}>Nuevo chat</span>
+              <span style={{ fontSize:13, color:'var(--oro)' }}>{t.newChat}</span>
             )}
           </div>
           <div style={{ display:'flex', gap:4 }}>
             <button className="hdr-btn" onClick={() => setPalette(true)}
-              aria-label="buscar (Ctrl+K)" title="Ctrl+K">{Ico.search}</button>
+              aria-label={t.searchLabel + ' (Ctrl+K)'} title="Ctrl+K">{Ico.search}</button>
             <button className={'hdr-btn' + (kbOpen ? ' active' : '')}
               onClick={() => setKbOpen(k=>!k)}
-              aria-label="recursos (Ctrl+I)" title="Ctrl+I">{Ico.kb}</button>
+              aria-label={t.resources + ' (Ctrl+I)'} title="Ctrl+I">{Ico.kb}</button>
           </div>
         </header>
 
-        <ChatArea messages={messages} turn={turn}
+        <ChatArea messages={messages} turn={turn} t={t}
           onPickRecent={id => { setActiveConvId(id); setEditCtx(null); }}
-          onCrystallize={() => showToast('cristalizar → elemento 10 del runtime')}
-          onEditMessage={t => setSeed(t)} />
+          onCrystallize={() => showToast(t.crystallize + ' → runtime')}
+          onEditMessage={t2 => setSeed(t2)} />
 
         <Composer onSend={handleSend} onStop={() => turnRef.current?.stop()}
-          generating={turn.active} seedText={seedText} />
+          generating={turn.active} seedText={seedText} t={t} />
       </main>
 
       <KBPanel open={kbOpen} onClose={() => setKbOpen(false)}
-        conversationId={activeConvId} folderId={folderId} />
+        conversationId={activeConvId} folderId={folderId} t={t} />
 
       <CommandPalette open={paletteOpen} onClose={() => setPalette(false)}
-        onOpenConversation={id => { setActiveConvId(id); setEditCtx(null); }} />
+        onOpenConversation={id => { setActiveConvId(id); setEditCtx(null); }} t={t} />
 
       {toast && <div className="toast fade-in" role="status">{toast}</div>}
     </div>

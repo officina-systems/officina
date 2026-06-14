@@ -4,7 +4,7 @@ import { selectRecent } from '../data/selectors';
 
 const fmt = iso => new Date(iso).toLocaleTimeString('es',{ hour:'2-digit', minute:'2-digit' });
 
-export default function ChatArea({ messages, turn, onPickRecent, onCrystallize, onEditMessage }) {
+export default function ChatArea({ messages, turn, onPickRecent, onCrystallize, onEditMessage, t }) {
   const scrollerRef = useRef(null);
   const endRef      = useRef(null);
   const stick       = useRef(true);
@@ -28,11 +28,11 @@ export default function ChatArea({ messages, turn, onPickRecent, onCrystallize, 
     return (
       <div className="empty-state fade-in">
         <div className="empty-logo">officina</div>
-        <div className="empty-title">¿En qué trabajamos, Jefe?</div>
+        <div className="empty-title">{t.emptyTitle}</div>
         <div className="empty-chips">
           {selectRecent(3).map(c => (
             <button key={c.id} className="empty-chip" onClick={() => onPickRecent(c.id)}>
-              Continuar: {c.title}
+              {t.continueLabel} {c.title}
             </button>
           ))}
         </div>
@@ -60,7 +60,7 @@ export default function ChatArea({ messages, turn, onPickRecent, onCrystallize, 
             <div style={{ display:'flex', alignItems:'center', gap:8 }}>
               <div className="msg-actions">
                 <button onClick={() => copy(m.content)}>copiar</button>
-                <button onClick={() => onCrystallize(m)}>cristalizar</button>
+                <button onClick={() => onCrystallize(m)}>{t.crystallize}</button>
                 <button>reintentar</button>
               </div>
               {m.model_used && <span className="msg-meta">{m.model_used}</span>}

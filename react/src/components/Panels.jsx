@@ -9,7 +9,7 @@ const FileIco = () => (
 );
 
 /* ── Panel de recursos ── */
-export function KBPanel({ open, conversationId, folderId, onClose }) {
+export function KBPanel({ open, conversationId, folderId, onClose, t }) {
   const docs = [
     ...selectDocuments({ conversationId }),
     ...selectDocuments({ folderId }),
@@ -17,8 +17,8 @@ export function KBPanel({ open, conversationId, folderId, onClose }) {
   return (
     <aside className={'kb-panel' + (open ? ' open' : '')}>
       <div className="kb-header">
-        <span className="kb-sec-label">RECURSOS</span>
-        <button className="hdr-btn" onClick={onClose} aria-label="cerrar">×</button>
+        <span className="kb-sec-label">{t.resourcesPanel}</span>
+        <button className="hdr-btn" onClick={onClose} aria-label={t.close}>×</button>
       </div>
       <div className="kb-list">
         {docs.length === 0 && (
@@ -43,7 +43,7 @@ export function KBPanel({ open, conversationId, folderId, onClose }) {
 }
 
 /* ── Command palette ── */
-export function CommandPalette({ open, onClose, onOpenConversation }) {
+export function CommandPalette({ open, onClose, onOpenConversation, t }) {
   const [q, setQ]   = useState('');
   const [idx, setIdx] = useState(0);
   const inputRef    = useRef(null);
@@ -53,10 +53,10 @@ export function CommandPalette({ open, onClose, onOpenConversation }) {
 
   const r = selectSearch(q);
   const flat = [
-    ...r.conversations.map(c => ({ kind: 'chat',      id: c.id, label: c.title })),
-    ...r.workspaces.map(w =>    ({ kind: 'proyecto',  id: w.id, label: w.name  })),
-    ...r.folders.map(f =>       ({ kind: 'carpeta',   id: f.id, label: f.name  })),
-    ...r.nodes.slice(0,4).map(n=>({ kind: 'nodo',     id: n.id, label: n.name  })),
+    ...r.conversations.map(c => ({ kind: t.kindChat,      id: c.id, label: c.title })),
+    ...r.workspaces.map(w =>    ({ kind: t.kindProject,  id: w.id, label: w.name  })),
+    ...r.folders.map(f =>       ({ kind: t.kindFolder,   id: f.id, label: f.name  })),
+    ...r.nodes.slice(0,4).map(n=>({ kind: t.kindNode,     id: n.id, label: n.name  })),
   ];
 
   const go = item => {
@@ -68,7 +68,7 @@ export function CommandPalette({ open, onClose, onOpenConversation }) {
     <div className="palette-overlay" onClick={onClose}>
       <div className="palette-box" onClick={e => e.stopPropagation()}>
         <input ref={inputRef} className="palette-input"
-          placeholder="Buscar proyectos, carpetas, chats, nodos…"
+          placeholder={t.paletteHint}
           value={q} onChange={e => { setQ(e.target.value); setIdx(0); }}
           onKeyDown={e => {
             if (e.key==='ArrowDown') { e.preventDefault(); setIdx(i => Math.min(i+1, flat.length-1)); }

@@ -8,7 +8,7 @@ const Ico = {
   stop:   <svg width="12" height="12" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" fill="var(--oro)"/></svg>,
 };
 
-export default function Composer({ onSend, onStop, generating, seedText = '' }) {
+export default function Composer({ onSend, onStop, generating, seedText = '', t }) {
   const [text, setText]         = useState('');
   const [attachments, setAtts]  = useState([]);
   const [model, setModel]       = useState(selectModels()[0]);
@@ -84,7 +84,7 @@ export default function Composer({ onSend, onStop, generating, seedText = '' }) 
 
         <textarea ref={taRef} rows={1} value={text}
           className="composer-ta"
-          placeholder="Escribe o habla…"
+          placeholder={t.placeholder}
           aria-label="mensaje"
           onChange={e => setText(e.target.value)}
           onPaste={e => {
