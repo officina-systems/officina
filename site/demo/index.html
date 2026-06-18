@@ -1,22 +1,1189 @@
 <!doctype html>
-<html lang="es">
-  <head>
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-    <link rel="manifest" href="./manifest.json">
-    <link rel="apple-touch-icon" href="./icon-180.png">
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="OFFICINA">
-    <meta name="theme-color" content="#0055A4">
-    <title>OFFICINA</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Inter:wght@400;500;650;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="./assets/index-BvoNstKF.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-BDUXv3N7.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OFFICINA: AI-native operational runtime for cost-aware, multi-model workflows</title>
+<meta name="description" content="OFFICINA is an open-source AI-native runtime that turns one chat interface into an operational layer: route work across local and cloud models by cost and risk, orchestrate tools, preserve operational context, and keep high-risk actions under human approval." />
+<meta property="og:title" content="OFFICINA: AI-native operational runtime" />
+<meta property="og:description" content="One chat interface that picks the right model, escalates only when needed, keeps work under human control, and never loses operational context." />
+<meta property="og:type" content="website" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root{
+ --bg:#06080f; --bg2:#0a0f1a; --bg3:#0f1626; --bg4:#131c2e; --bg-code:#0b1120;
+ --border:rgba(233,237,245,.07); --border2:rgba(233,237,245,.13); --border3:rgba(233,237,245,.2);
+ --text:#e9edf5; --text2:rgba(233,237,245,.64); --text3:rgba(233,237,245,.42);
+ --oro:#c9a23a; --oro-lite:#e0bd55; --oro-soft:rgba(201,162,58,.14);
+ --azzurro:#0055A4; --azzurro-lite:#3b82d4; --azzurro-soft:rgba(59,130,212,.14);
+ --viola:#863bff; --ciano:#47bfff; --verde:#3ec98a; --danger:#e2603f;
+ --accent:var(--oro);
+ --sans:'Nunito',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+ --maxw:1180px; --radius:16px; --radius-sm:10px; --gap:20px; --nav-h:72px;
+ --ease:cubic-bezier(.16,1,.3,1); --fast:.18s var(--ease); --med:.45s var(--ease);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+canvas{display:block}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+button{font-family:inherit}
+svg{display:block}
+::selection{background:rgba(201,162,58,.32);color:#fff}
+:focus-visible{outline:2px solid var(--oro);outline-offset:3px;border-radius:4px}
+
+.container{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+.section{padding:100px 0;position:relative}
+.section--bordered{border-top:1px solid var(--border)}
+@media(max-width:760px){.section{padding:64px 0}.container{padding:0 20px}}
+
+/* type */
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);display:inline-flex;align-items:center;gap:11px;margin-bottom:18px}
+.eyebrow::before{content:'';width:22px;height:1px;background:currentColor;display:block;flex-shrink:0}
+.eyebrow.c-cyan{color:var(--ciano)} .eyebrow.c-blue{color:var(--azzurro-lite)}
+.eyebrow.c-amber{color:var(--oro)} .eyebrow.c-coral{color:var(--danger)}
+.eyebrow.c-violet{color:var(--viola)} .eyebrow.c-verde{color:var(--verde)} .eyebrow.c-muted{color:var(--text3)}
+h1,h2,h3,h4{font-weight:800;letter-spacing:-.02em;color:var(--text)}
+h1{font-size:clamp(2.05rem,4.1vw,3.15rem);line-height:1.09;letter-spacing:-.03em;font-weight:900}
+h2{font-size:clamp(1.7rem,3.3vw,2.45rem);line-height:1.16}
+h3{font-size:1.12rem;line-height:1.4;font-weight:700}
+p{color:var(--text2)}
+.lead{font-size:clamp(1.02rem,1.4vw,1.16rem);color:var(--text2);max-width:660px}
+.mono{font-family:var(--mono)}
+.glow{color:var(--oro)} .glow.t{color:var(--ciano)}
+.section__head{max-width:730px;margin-bottom:48px}
+.section__head.center{margin-inline:auto;text-align:center}
+.section__head.center .eyebrow{justify-content:center}
+.section__head h2{margin-bottom:15px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:9px;padding:13px 22px;border-radius:999px;font-size:14px;font-weight:700;font-family:var(--sans);border:1px solid transparent;cursor:pointer;transition:transform var(--fast),border-color var(--fast),background var(--fast),color var(--fast),box-shadow var(--fast);white-space:nowrap}
+.btn--primary{background:var(--azzurro);color:#fff}
+.btn--primary:hover{transform:translateY(-2px);background:#0061bd;box-shadow:0 12px 30px rgba(0,85,164,.4)}
+.btn--gold{background:var(--oro);color:#1a1405}
+.btn--gold:hover{transform:translateY(-2px);background:var(--oro-lite);box-shadow:0 12px 30px rgba(201,162,58,.32)}
+.btn--ghost{border-color:var(--border3);color:var(--text);background:transparent}
+.btn--ghost:hover{border-color:var(--oro);color:var(--oro);transform:translateY(-2px)}
+.btn--sm{padding:9px 16px;font-size:13px}
+.btn--arrow{transition:transform var(--fast);display:inline-block}
+.btn:hover .btn--arrow{transform:translateX(3px)}
+.actions{display:flex;gap:13px;flex-wrap:wrap}
+
+/* icons */
+.ico{display:inline-flex}
+.ico svg{width:21px;height:21px;stroke:currentColor;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:200;display:flex;align-items:center;border-bottom:1px solid transparent;transition:background var(--med),border-color var(--med),backdrop-filter var(--med)}
+.nav.is-scrolled{background:rgba(6,8,15,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom-color:var(--border)}
+.nav__inner{width:100%;display:flex;align-items:center;justify-content:space-between}
+.nav__brand{font-family:var(--sans);font-weight:900;font-size:22px;letter-spacing:-.03em;color:var(--oro)}
+.nav__links{display:flex;align-items:center;gap:28px}
+.nav__link{font-size:14px;font-weight:600;color:var(--text2);transition:color var(--fast)}
+.nav__link:hover{color:var(--text)}
+.nav__toggle{display:none}
+@media(max-width:900px){
+ .nav__links{position:fixed;top:var(--nav-h);right:0;left:0;background:rgba(6,8,15,.98);border-bottom:1px solid var(--border);flex-direction:column;align-items:flex-start;gap:16px;padding:22px 24px 26px;transform:translateY(-8px);opacity:0;pointer-events:none;transition:opacity var(--fast),transform var(--fast)}
+ .nav__links.is-open{opacity:1;transform:translateY(0);pointer-events:auto}
+ .nav__toggle{display:flex;flex-direction:column;justify-content:center;gap:5px;width:30px;height:22px;background:none;border:none;cursor:pointer}
+ .nav__toggle span{display:block;height:1.5px;width:100%;background:var(--text);border-radius:2px}
+}
+
+/* hero */
+.hero{position:relative;padding-top:calc(var(--nav-h) + 60px);padding-bottom:80px;overflow:hidden}
+.hero__bg{position:absolute;inset:0;width:100%;height:100%;opacity:.32}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 30% 35%,transparent 0%,var(--bg) 82%);pointer-events:none}
+.hero__grid{position:relative;z-index:2;display:grid;grid-template-columns:1.02fr .98fr;gap:50px;align-items:center}
+.hero__copy{max-width:600px}
+.hero h1{margin-bottom:20px}
+.hero .lead{font-size:clamp(1.04rem,1.5vw,1.18rem);margin-bottom:30px}
+.hero .actions{margin-bottom:30px}
+.hero__sig{font-family:var(--mono);font-size:12px;color:var(--text3);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.hero__sig b{color:var(--oro);font-weight:600}
+.hero__sig .sep{width:3px;height:3px;border-radius:50%;background:var(--text3)}
+@media(max-width:960px){
+ .hero{padding-top:calc(var(--nav-h) + 36px);padding-bottom:52px}
+ .hero__grid{grid-template-columns:1fr;gap:40px}
+ .hero__copy{max-width:640px}
+}
+
+/* product mock (hero signature) */
+.mock{background:linear-gradient(180deg,var(--bg3),var(--bg2));border:1px solid var(--border2);border-radius:18px;box-shadow:0 30px 80px rgba(0,0,8,.55);overflow:hidden}
+.mock__bar{display:flex;align-items:center;gap:8px;padding:13px 16px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.015)}
+.mock__bar .d{width:10px;height:10px;border-radius:50%;background:#2a3346}
+.mock__bar .t{margin-left:8px;font-weight:800;font-size:13px;color:var(--oro);letter-spacing:-.01em}
+.mock__bar .tag-prev{margin-left:auto;font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);border:1px solid var(--border2);padding:3px 8px;border-radius:20px}
+.mock__body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:12px}
+.bubble{font-family:var(--body);font-size:13.5px;line-height:1.5;padding:11px 14px;border-radius:13px;max-width:88%}
+.bubble--user{align-self:flex-end;background:var(--azzurro);color:#fff;border-bottom-right-radius:4px}
+.bubble--bot{align-self:flex-start;background:var(--bg4);color:var(--text);border:1px solid var(--border);border-bottom-left-radius:4px}
+.trace{border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.012);padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.trace__row{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11.5px;color:var(--text2)}
+.trace__row .tk{color:var(--text3);min-width:74px}
+.trace__row svg{width:13px;height:13px;stroke:var(--verde);stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.trace__row .cost{margin-left:auto;font-size:10.5px;color:var(--oro);border:1px solid rgba(201,162,58,.3);background:var(--oro-soft);padding:2px 7px;border-radius:20px}
+.trace__row .lo{color:var(--verde)}
+.approve{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:1px solid rgba(0,85,164,.35);background:rgba(0,85,164,.1);border-radius:12px;padding:11px 13px}
+.approve .lbl{font-family:var(--mono);font-size:11.5px;color:var(--azzurro-lite);display:flex;align-items:center;gap:7px}
+.approve .pulse{width:8px;height:8px;border-radius:50%;background:var(--azzurro-lite)}
+.approve .mini{margin-left:auto;display:flex;gap:7px}
+.approve .mini span{font-family:var(--sans);font-weight:700;font-size:11.5px;padding:5px 11px;border-radius:8px}
+.approve .mini .ok{background:var(--azzurro);color:#fff}
+.approve .mini .edit{border:1px solid var(--border2);color:var(--text2)}
+
+/* signal strip */
+.signals{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:8px}
+.signal{border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg2);padding:18px 18px 16px;transition:border-color var(--med),transform var(--med)}
+.signal:hover{border-color:var(--border2);transform:translateY(-3px)}
+.signal .si{color:var(--oro);margin-bottom:11px}
+.signal b{display:block;font-family:var(--sans);font-weight:800;font-size:14px;margin-bottom:5px;color:var(--text)}
+.signal span{font-size:.85rem;color:var(--text2);font-family:var(--body)}
+@media(max-width:860px){.signals{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.signals{grid-template-columns:1fr}}
+
+/* grids + cards */
+.grid{display:grid;gap:var(--gap)}
+.grid--3{grid-template-columns:repeat(3,1fr)}
+.grid--2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:900px){.grid--3,.grid--2{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.grid--3,.grid--2{grid-template-columns:1fr}}
+.card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:28px;transition:transform var(--med),border-color var(--med),box-shadow var(--med)}
+.card:hover{transform:translateY(-4px)}
+.card__icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.card h3{margin-bottom:9px}
+.card p{font-size:.94rem;font-family:var(--body)}
+.card ul li{font-size:.92rem;color:var(--text2);padding-left:18px;position:relative;margin-bottom:9px;font-family:var(--body)}
+.card ul li::before{content:'';position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--oro);opacity:.65}
+.card ul li strong{color:var(--text);font-weight:600}
+.card__meta{margin-top:16px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
+.card--coral:hover{border-color:rgba(226,96,63,.4);box-shadow:0 14px 36px rgba(226,96,63,.1)} .card--coral .card__icon{background:rgba(226,96,63,.13);color:var(--danger)}
+.card--gold:hover{border-color:rgba(201,162,58,.4);box-shadow:0 14px 36px rgba(201,162,58,.1)} .card--gold .card__icon{background:var(--oro-soft);color:var(--oro)}
+.card--violet:hover{border-color:rgba(134,59,255,.4);box-shadow:0 14px 36px rgba(134,59,255,.1)} .card--violet .card__icon{background:rgba(134,59,255,.13);color:var(--viola)}
+.card--blue:hover{border-color:rgba(59,130,212,.45);box-shadow:0 14px 36px rgba(0,85,164,.14)} .card--blue .card__icon{background:var(--azzurro-soft);color:var(--azzurro-lite)}
+.card--cyan:hover{border-color:rgba(71,191,255,.4);box-shadow:0 14px 36px rgba(71,191,255,.1)} .card--cyan .card__icon{background:rgba(71,191,255,.13);color:var(--ciano)}
+
+/* use-case mini cards */
+.uc{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:transform var(--med),border-color var(--med)}
+.uc:hover{transform:translateY(-4px);border-color:var(--border2)}
+.uc h3{font-size:1.02rem;margin-bottom:7px;display:flex;align-items:center;gap:10px}
+.uc h3 .ico{color:var(--azzurro-lite)}
+.uc p{font-size:.9rem;font-family:var(--body)}
+
+/* tags */
+.tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:20px;display:inline-block;border:1px solid}
+.tag--gold{color:var(--oro);border-color:rgba(201,162,58,.3);background:var(--oro-soft)}
+.tag--blue{color:var(--azzurro-lite);border-color:rgba(0,85,164,.4);background:rgba(0,85,164,.14)}
+.tag--cyan{color:var(--ciano);border-color:rgba(71,191,255,.3);background:rgba(71,191,255,.08)}
+.tag--violet{color:var(--viola);border-color:rgba(134,59,255,.3);background:rgba(134,59,255,.08)}
+.tag--muted{color:var(--text3);border-color:var(--border2);background:transparent}
+.tagrow{display:flex;flex-wrap:wrap;gap:10px}
+
+/* split */
+.split{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}
+.split--top{align-items:start}
+@media(max-width:900px){.split{grid-template-columns:1fr;gap:34px}}
+.panel{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;position:relative}
+.panel__canvas{width:100%;height:320px;display:block}
+.panel__canvas--lg{height:400px}
+.panel__label{position:absolute;top:14px;left:14px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);padding:5px 12px;border:1px solid var(--border);border-radius:20px;background:rgba(6,8,15,.65);z-index:2}
+@media(max-width:760px){.panel__canvas,.panel__canvas--lg{height:280px}}
+
+/* legend */
+.grid--legend{grid-template-columns:repeat(4,1fr)}
+@media(max-width:900px){.grid--legend{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.grid--legend{grid-template-columns:1fr}}
+.legend{border:1px solid var(--border);border-radius:var(--radius-sm);padding:18px;background:var(--bg2)}
+.legend__dot{width:11px;height:11px;border-radius:50%;margin-bottom:13px}
+.legend h4{font-size:13px;letter-spacing:0;margin-bottom:7px}
+.legend p{font-size:.85rem;font-family:var(--body)}
+
+/* steps (real sequence -> numbered) */
+.steps{display:grid;grid-template-columns:1fr 1fr;gap:12px;counter-reset:step}
+.step{display:grid;grid-template-columns:46px 1fr;gap:18px;align-items:start;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;transition:border-color var(--med),transform var(--med)}
+.step:hover{border-color:var(--border2);transform:translateY(-3px)}
+.step__num{counter-increment:step;font-family:var(--mono);font-size:14px;font-weight:600;color:var(--oro);width:40px;height:40px;border-radius:10px;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;background:var(--oro-soft)}
+.step__num::before{content:counter(step,decimal-leading-zero)}
+.step h3{margin-bottom:4px;font-size:1rem}
+.step p{font-size:.9rem;font-family:var(--body)}
+.step--human{border-color:rgba(0,85,164,.32);background:rgba(0,85,164,.06)}
+.step--human .step__num{color:var(--azzurro-lite);background:var(--azzurro-soft)}
+@media(max-width:760px){.steps{grid-template-columns:1fr}}
+
+/* examples */
+.examples{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:860px){.examples{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.examples{grid-template-columns:1fr}}
+.ex{border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg2);padding:18px 20px;transition:border-color var(--med),transform var(--med)}
+.ex:hover{border-color:var(--border2);transform:translateY(-3px)}
+.ex b{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ciano);margin-bottom:9px}
+.ex b .ico svg{width:15px;height:15px}
+.ex p{font-size:.9rem;color:var(--text);font-family:var(--body)}
+.ex p .q{color:var(--text2);font-style:italic}
+
+/* status */
+.status{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.status__row{display:grid;grid-template-columns:158px 1fr;border-top:1px solid var(--border)}
+.status__row:first-child{border-top:none}
+.status__k{padding:18px 22px;background:var(--bg2);font-family:var(--mono);font-size:12px;display:flex;align-items:center;gap:10px}
+.status__v{padding:18px 22px;background:var(--bg3);font-size:.93rem;color:var(--text2);font-family:var(--body)}
+.status__v strong{color:var(--text);font-weight:600}
+.dotk{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-live{background:var(--verde)}
+.dot-dev{background:var(--oro)}
+.dot-plan{background:var(--text3)}
+@media(max-width:600px){.status__row{grid-template-columns:1fr}.status__k{border-bottom:1px solid var(--border)}}
+
+/* chain */
+.chain{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.chain__arrow{font-family:var(--mono);color:var(--text3);font-size:14px}
+
+/* diff table */
+.diff{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.diff__row{display:grid;grid-template-columns:1fr 1.25fr;border-top:1px solid var(--border)}
+.diff__row:first-child{border-top:none}
+.diff__head{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.diff__head .diff__a{color:var(--text3)} .diff__head .diff__b{color:var(--oro)}
+.diff__a{padding:17px 22px;background:var(--bg2);color:var(--text2);font-size:.92rem;display:flex;align-items:center;font-family:var(--body)}
+.diff__b{padding:17px 22px;background:var(--bg3);color:var(--text);font-size:.93rem;display:flex;align-items:center;gap:10px;font-family:var(--body)}
+.diff__row:not(.diff__head) .diff__b::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--oro);flex-shrink:0}
+@media(max-width:600px){.diff__row{grid-template-columns:1fr}.diff__head{display:none}.diff__a{border-bottom:1px solid var(--border)}}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:12px}
+.chip{border:1px solid var(--border2);border-radius:999px;padding:9px 18px;font-size:.9rem;font-weight:600;color:var(--text);background:var(--bg2)}
+
+/* cta */
+.cta{border:1px solid var(--border2);border-radius:22px;padding:60px 52px;background:radial-gradient(ellipse 80% 120% at 100% 0%,rgba(201,162,58,.13),transparent 58%),radial-gradient(ellipse 70% 100% at 0% 100%,rgba(0,85,164,.16),transparent 60%),var(--bg2);text-align:center}
+.cta .eyebrow{justify-content:center}
+.cta h2{margin-bottom:14px}
+.cta .lead{margin-inline:auto;margin-bottom:28px}
+.cta .actions{justify-content:center}
+.cta__foot{margin-top:22px;font-family:var(--mono);font-size:.82rem;color:var(--text3)}
+@media(max-width:600px){.cta{padding:42px 24px}}
+
+/* footer */
+.footer{border-top:1px solid var(--border);padding:54px 0 40px}
+.footer__grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:34px;margin-bottom:36px}
+.footer__brand{max-width:380px}
+.footer__brand .nav__brand{margin-bottom:13px}
+.footer__brand p{font-size:.92rem;font-family:var(--body)}
+.footer__links{display:flex;gap:46px;flex-wrap:wrap}
+.footer__col h4{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:13px}
+.footer__col a{display:block;font-size:.92rem;color:var(--text2);margin-bottom:9px;transition:color var(--fast);font-family:var(--body)}
+.footer__col a:hover{color:var(--oro)}
+.footer__bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-top:0;border-top:none}
+.footer__bottom small{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:.02em}
+
+/* KISS collapse viz (fills the side panels with a real, on-brand message) */
+.kviz{height:100%;min-height:300px;padding:26px 28px;display:flex;flex-direction:column;justify-content:center;gap:14px}
+.kviz__cap{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3)}
+.kmany{display:flex;flex-wrap:wrap;gap:8px}
+.kbit{font-family:var(--body);font-size:12.5px;color:var(--text3);border:1px dashed var(--border2);border-radius:8px;padding:7px 11px;display:flex;align-items:center;gap:7px}
+.kbit svg{width:12px;height:12px;stroke:var(--danger);stroke-width:2.2;fill:none;stroke-linecap:round;flex-shrink:0}
+.kmerge{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin:2px 0}
+.kmerge .ln{flex:1;height:1px;background:var(--border2)}
+.kone{border:1px solid rgba(201,162,58,.42);background:var(--oro-soft);border-radius:13px;padding:16px 18px;display:flex;align-items:center;gap:14px}
+.kone .ico{flex-shrink:0;color:var(--oro)}
+.kone .ico svg{width:24px;height:24px}
+.kone b{font-weight:800;color:var(--text);font-size:15px;display:block;margin-bottom:2px}
+.kone span{font-size:12.5px;color:var(--text2);font-family:var(--body);line-height:1.45}
+.kone--blue{border-color:rgba(59,130,212,.45);background:var(--azzurro-soft)} .kone--blue .ico{color:var(--azzurro-lite)}
+
+/* MDI+ principle strip */
+.mdi{margin-top:20px;border:1px solid rgba(201,162,58,.28);background:linear-gradient(180deg,var(--oro-soft),transparent);border-radius:var(--radius);padding:24px 26px;display:flex;gap:18px;align-items:flex-start}
+.mdi .ico{color:var(--oro);flex-shrink:0;margin-top:2px}
+.mdi .ico svg{width:24px;height:24px}
+.mdi h3{margin-bottom:6px}
+.mdi p{font-size:.94rem;font-family:var(--body)}
+@media(max-width:600px){.mdi{flex-direction:column;gap:12px}}
+
+/* footer small print */
+.footer__legal{border-top:1px solid var(--border);padding-top:24px;margin-bottom:20px}
+.smallprint{font-size:.78rem;line-height:1.65;color:var(--text3);font-family:var(--body);max-width:940px}
+.smallprint a{color:var(--text3);text-decoration:underline;text-underline-offset:2px}
+.smallprint a:hover{color:var(--oro)}
+
+/* concept cards, defined concepts instead of decorative tags */
+.concepts{display:grid;gap:14px}
+.concepts--2{grid-template-columns:1fr 1fr}
+.concepts--3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:760px){.concepts--2,.concepts--3{grid-template-columns:1fr}}
+.concept{border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg2);padding:16px 18px;transition:border-color var(--med),transform var(--med)}
+.concept:hover{border-color:var(--border2);transform:translateY(-3px)}
+.concept__h{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.concept__h .ico{flex-shrink:0}
+.concept__h .ico svg{width:17px;height:17px}
+.concept__h b{font-family:var(--sans);font-weight:800;font-size:14.5px;color:var(--text);letter-spacing:-.01em}
+.concept p{font-size:.86rem;color:var(--text2);font-family:var(--body);line-height:1.5}
+.concept--gold .ico{color:var(--oro)} .concept--gold:hover{border-color:rgba(201,162,58,.4)}
+.concept--cyan .ico{color:var(--ciano)} .concept--cyan:hover{border-color:rgba(71,191,255,.4)}
+.concept--blue .ico{color:var(--azzurro-lite)} .concept--blue:hover{border-color:rgba(59,130,212,.45)}
+.concept--violet .ico{color:var(--viola)} .concept--violet:hover{border-color:rgba(134,59,255,.4)}
+
+/* provider fallback as an ordered, defined chain */
+.fallback{display:flex;flex-direction:column;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.fstep{display:grid;grid-template-columns:30px 1fr auto;gap:14px;align-items:center;padding:14px 18px;border-top:1px solid var(--border)}
+.fstep:first-child{border-top:none}
+.fstep__n{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.fstep__name{font-family:var(--sans);font-weight:700;font-size:14px;color:var(--text)}
+.fstep__role{font-family:var(--body);font-size:.84rem;color:var(--text2)}
+.fstep__tier{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:20px;border:1px solid;white-space:nowrap}
+.tier-primary{color:var(--viola);border-color:rgba(134,59,255,.35);background:rgba(134,59,255,.08)}
+.tier-alt{color:var(--azzurro-lite);border-color:rgba(59,130,212,.4);background:var(--azzurro-soft)}
+.tier-local{color:var(--text3);border-color:var(--border2)}
+.fstep__main{display:flex;flex-direction:column;gap:1px}
+@media(max-width:520px){.fstep{grid-template-columns:24px 1fr;row-gap:4px}.fstep__tier{grid-column:2}}
+
+/* runtime pipeline strip */
+.pipe{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:34px;padding:18px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg2)}
+.pipe span{font-family:var(--mono);font-size:12px;color:var(--text2);padding:6px 12px;border:1px solid var(--border2);border-radius:8px;white-space:nowrap}
+.pipe span.h{color:var(--azzurro-lite);border-color:rgba(59,130,212,.45);background:var(--azzurro-soft)}
+.pipe i{font-style:normal;color:var(--text3);font-family:var(--mono);font-size:13px}
+
+/* capture -> graph -> retrieval flow */
+.flow3{display:grid;grid-template-columns:1fr 92px 1.1fr 92px 1fr;gap:12px;align-items:stretch;margin-top:8px}
+.flow3__box{border:1px solid var(--border);background:var(--bg2);border-radius:var(--radius-sm);padding:18px 20px;display:flex;flex-direction:column;justify-content:center}
+.flow3__box--core{border-color:rgba(201,162,58,.5);background:var(--oro-soft)}
+.flow3__cap{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:9px}
+.flow3__box b{font-family:var(--sans);font-weight:800;font-size:17px;color:var(--text);display:block;margin-bottom:3px}
+.flow3__box em{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--oro)}
+.flow3__box ul{display:flex;flex-direction:column;gap:5px}
+.flow3__box li{font-size:.84rem;color:var(--text2);font-family:var(--body)}
+.flow3__arr{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--text3)}
+.flow3__arr span{font-family:var(--mono);font-size:9px;letter-spacing:.04em;text-transform:uppercase;color:var(--oro);text-align:center;line-height:1.3}
+.flow3__arr i{font-style:normal;font-size:20px;color:var(--text3)}
+@media(max-width:780px){.flow3{grid-template-columns:1fr}.flow3__arr{flex-direction:row;gap:10px;padding:2px 0}.flow3__arr i{transform:rotate(90deg)}}
+
+/* framework map */
+.fmap{display:flex;flex-direction:column;gap:9px;margin-top:8px}
+.fmap__layer{border:1px solid var(--border);border-radius:var(--radius);background:var(--bg2);padding:17px 20px}
+.fmap__layer--core{border-color:rgba(201,162,58,.5);background:var(--oro-soft)}
+.fmap__tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:11px}
+.fmap__layer--core .fmap__tag{color:var(--oro)}
+.fmap__blocks{display:flex;flex-wrap:wrap;gap:10px}
+.fmap__blocks>div{flex:1;min-width:150px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg3);padding:12px 14px;font-family:var(--sans);font-weight:700;font-size:13.5px;color:var(--text)}
+.fmap__blocks>div small{display:block;font-family:var(--body);font-weight:400;font-size:.8rem;color:var(--text2);margin-top:3px}
+.fmap__core{flex-basis:100%!important;border-color:rgba(201,162,58,.5)!important;background:rgba(201,162,58,.08)!important}
+.fmap__down{text-align:center;color:var(--text3);font-family:var(--mono);font-size:13px;line-height:1}
+
+/* generic note strip (reuses MDI styling) */
+.note{margin-top:20px;border:1px solid var(--border2);background:var(--bg2);border-radius:var(--radius);padding:22px 24px;display:flex;gap:18px;align-items:flex-start}
+.note .ico{color:var(--azzurro-lite);flex-shrink:0;margin-top:2px}
+.note .ico svg{width:24px;height:24px}
+.note h3{margin-bottom:5px}
+.note p{font-size:.94rem;font-family:var(--body)}
+@media(max-width:600px){.note{flex-direction:column;gap:12px}}
+
+/* reveal */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp .8s var(--ease) both}
+.d1{animation-delay:.05s}.d2{animation-delay:.16s}.d3{animation-delay:.28s}.d4{animation-delay:.4s}.d5{animation-delay:.52s}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ .reveal,.fade-up{animation:none!important;transition:none!important;opacity:1!important;transform:none!important}
+ .card,.btn,.signal,.step,.ex,.uc{transition:none!important}
+ .approve .pulse{animation:none!important}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+ <div class="container nav__inner">
+ <a href="#top" class="nav__brand">officina</a>
+ <button class="nav__toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+ <div class="nav__links">
+ <a href="#problem" class="nav__link">Problem</a>
+ <a href="#platform" class="nav__link">Platform</a>
+ <a href="#graph" class="nav__link">Nodes &amp; edges</a>
+ <a href="#how" class="nav__link">How it works</a>
+ <a href="#architecture" class="nav__link">Architecture</a>
+ <a href="#stage" class="nav__link">Stage</a>
+ <a href="https://github.com/pierangelopirro/officina" data-repo class="btn btn--ghost btn--sm" target="_blank" rel="noopener">GitHub ↗</a>
+ </div>
+ </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+ <canvas class="graph-canvas hero__bg" data-density="1.15" aria-hidden="true"></canvas>
+ <div class="container">
+ <div class="hero__grid">
+ <div class="hero__copy">
+ <div class="eyebrow fade-up d1">Open-source AI-native runtime</div>
+ <h1 class="fade-up d2">The right model, the right tool, the right level of <span class="glow">validation</span>, for every task.</h1>
+ <p class="lead fade-up d3">
+ OFFICINA is AI-native infrastructure for cost-aware, multi-model operational work, for
+ developers and operating teams alike. One chat interface routes each task across local and cloud
+ models by cost and risk, orchestrates your tools and systems, preserves operational context, and
+ holds high-risk actions for human approval.
+ </p>
+ <div class="actions fade-up d4">
+ <a href="https://github.com/pierangelopirro/officina" data-repo class="btn btn--primary" target="_blank" rel="noopener">View the repository <span class="btn--arrow">→</span></a>
+ <a href="#contact" class="btn btn--ghost">Contact us</a>
+ </div>
+ <div class="hero__sig fade-up d5">
+ <span><b>Open-source</b></span><span class="sep"></span>
+ <span><b>Multi-model</b></span><span class="sep"></span>
+ <span><b>Cost-aware</b></span><span class="sep"></span>
+ <span><b>Human-in-the-loop</b></span>
+ </div>
+ </div>
+
+ <div class="hero__mock fade-up d3">
+ <div class="mock">
+ <div class="mock__bar">
+ <span class="d"></span><span class="d"></span><span class="d"></span>
+ <span class="t">officina</span>
+ <span class="tag-prev">Illustrative preview</span>
+ </div>
+ <div class="mock__body">
+ <div class="bubble bubble--user">Review this week's open invoices and draft follow-ups.</div>
+ <div class="trace">
+ <div class="trace__row"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span class="tk">Classified</span> routine + external action</div>
+ <div class="trace__row"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span class="tk">Context</span> 3 invoices · vendor terms</div>
+ <div class="trace__row"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span class="tk">Model</span> <span class="lo">gemini-flash · low-cost</span><span class="cost">$0.002</span></div>
+ <div class="trace__row"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span class="tk">Tool</span> ERP read · 3 records</div>
+ <div class="trace__row"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span class="tk">Validated</span> drafts checked</div>
+ </div>
+ <div class="bubble bubble--bot">3 follow-up drafts ready. Sending touches an external system, so it needs your sign-off.</div>
+ <div class="approve">
+ <span class="lbl"><span class="pulse"></span> Awaiting human approval</span>
+ <span class="mini"><span class="ok">Approve &amp; send</span><span class="edit">Edit</span></span>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- ============ SIGNALS ============ -->
+<section class="section section--bordered" style="padding-top:0;border-top:none">
+ <div class="container">
+ <div class="signals reveal">
+ <div class="signal">
+ <span class="si ico"><svg viewBox="0 0 24 24"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+ <b>Cost-aware</b><span>Use premium models only where consequence or complexity demands it.</span>
+ </div>
+ <div class="signal">
+ <span class="si ico"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></span>
+ <b>Operational</b><span>Keep the minimum stabilized context needed to reconstruct work.</span>
+ </div>
+ <div class="signal">
+ <span class="si ico"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+ <b>Human-controlled</b><span>Irreversible and high-risk actions stay behind explicit approval.</span>
+ </div>
+ <div class="signal">
+ <span class="si ico"><svg viewBox="0 0 24 24"><path d="M6 3v12"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg></span>
+ <b>No lock-in</b><span>Runs across local, open-source, low-cost, and premium models.</span>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- ============ PROBLEM ============ -->
+<section class="section section--bordered" id="problem">
+ <div class="container">
+ <div class="section__head reveal">
+ <div class="eyebrow c-coral">The problem</div>
+ <h2>AI is powerful, but the way we work with it is fragmented.</h2>
+ <p class="lead">
+ Whether you are shipping code or running a business, useful AI work today is spread across chats,
+ local and premium models, agents, vector search, databases, CRMs, inboxes, and scattered notes.
+ The result is the same everywhere: expensive, fragile, and hard to reconstruct from one day to the
+ next.
+ </p>
+ </div>
+ <div class="grid grid--3 reveal">
+ <div class="card card--coral">
+ <div class="card__icon ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="6"/><path d="M15.5 4.2a6 6 0 0 1 0 13.6"/><path d="M9 6.5v5M6.8 8.2h3.4"/></svg></div>
+ <h3>Uncontrolled model cost</h3>
+ <p>Premium models get used for routine work a cheaper or local model could have handled safely, across a team, that spend adds up fast and quietly.</p>
+ </div>
+ <div class="card card--coral">
+ <div class="card__icon ico"><svg viewBox="0 0 24 24"><path d="M9.5 14.5 5 19"/><path d="M8 11 5.5 13.5a3.5 3.5 0 0 0 5 5L13 16"/><path d="M14.5 9.5 17 7"/><path d="M16 13l2.5-2.5a3.5 3.5 0 0 0-5-5L11 8"/></svg></div>
+ <h3>Lost operational context</h3>
+ <p>Decisions, constraints, and state disappear across sessions, tools, repos, and providers. Every
+ new session re-explains what was already settled.</p>
+ </div>
+ <div class="card card--coral">
+ <div class="card__icon ico"><svg viewBox="0 0 24 24"><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></div>
+ <h3>Unvalidated output as truth</h3>
+ <p>Exploratory or weakly checked AI output slips into systems of record, and into actions that touch real customers, money, or code, with nothing in the way.</p>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- ============ SOLUTION ============ -->
+<section class="section section--bordered" id="platform">
+ <div class="container">
+ <div class="split">
+ <div class="reveal">
+ <div class="eyebrow">The solution</div>
+ <h2>An operational runtime, not just a chatbot.</h2>
+ <p class="lead">
+ OFFICINA turns one conversational interface into an operational layer. You ask for work in plain
+ language; the runtime classifies the task, pulls the right context, picks a model by cost and
+ risk, calls tools when needed, validates the result, and asks for approval before anything
+ irreversible.
+ </p>
+ <p style="margin-top:14px;font-family:var(--body)">
+ The thesis is simple: chat becomes the place where real work gets executed across connected
+ systems, with cost control, validation, operational memory, and multi-model escalation built in.
+ </p>
+ <div class="concepts concepts--2" style="margin-top:28px">
+ <div class="concept concept--gold"><div class="concept__h"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M6 9v6"/><path d="M18 6h-5a4 4 0 0 0-4 4v8"/><path d="m15 9 3-3-3-3"/></svg></span><b>Cost-aware routing</b></div><p>Each task is matched to the cheapest model that can do it safely; premium only when it earns its cost.</p></div>
+ <div class="concept concept--cyan"><div class="concept__h"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg></span><b>Universal chat interface</b></div><p>One conversational surface that reaches into the tools and systems you connect, not ten consoles.</p></div>
+ <div class="concept concept--violet"><div class="concept__h"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></span><b>Operational ledger</b></div><p>Only stabilized state is kept, the minimum needed to reconstruct work across sessions.</p></div>
+ <div class="concept concept--blue"><div class="concept__h"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></span><b>Human-in-the-loop</b></div><p>Irreversible, external, or high-impact actions pause for an explicit human decision.</p></div>
+ </div>
+ </div>
+ <div class="reveal panel">
+ <div class="kviz">
+ <div class="kviz__cap">KISS: one surface, every tool</div>
+ <div class="kmany">
+ <span class="kbit"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>CRM console</span>
+ <span class="kbit"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>ERP screens</span>
+ <span class="kbit"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>DB client</span>
+ <span class="kbit"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>Email app</span>
+ <span class="kbit"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>Repo UI</span>
+ <span class="kbit"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>Admin panels</span>
+ </div>
+ <div class="kmerge"><span class="ln"></span> collapse into <span class="ln"></span></div>
+ <div class="kone">
+ <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg></span>
+ <div><b>One officina chat</b><span>Every scenario and tool driven from one conversational surface, nothing specialized to build, deploy, or operate.</span></div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- ============ NODES & EDGES ============ -->
+<section class="section section--bordered" id="graph">
+ <div class="container">
+ <div class="split">
+ <div class="reveal">
+ <div class="eyebrow c-amber">The core</div>
+ <h2>One graph: <span class="glow">nodes</span> and <span class="glow t">edges</span>.</h2>
+ <p class="lead">
+ This is the heart of OFFICINA. Every decision, document, conversation, and configuration value is
+ stored as a node in one graph, which gives the system two properties most tools never get for
+ free: <strong style="color:var(--text)">universal capture</strong> (anything can be recorded the
+ same way) and <strong style="color:var(--text)">universal retrieval</strong> (anything can be
+ found the same way).
+ </p>
+ <p style="margin-top:14px;font-family:var(--body)">
+ Because the graph carries those two advantages, OFFICINA needs no specialized tables or bespoke
+ queries per data type, one mechanism registers and retrieves everything, and that is exactly what
+ keeps cost-aware routing, context reconstruction, and the operational ledger simple enough to
+ actually work.
+ </p>
+ <p style="margin-top:14px;font-family:var(--body)">
+ Two relationship types are enough to represent how real work connects:
+ <strong style="color:var(--text)">belonging</strong>, this task is part of that project, and
+ <strong style="color:var(--text)">dependency</strong>, this draft depends on that contract.
+ Enough to stay useful without the graph becoming its own maintenance problem.
+ </p>
+ <div class="concepts concepts--3" style="margin-top:28px">
+ <div class="concept concept--gold"><div class="concept__h"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></span><b>PostgreSQL + pgvector</b></div><p>One store for both the graph and the vectors, structured records and semantic search together.</p></div>
+ <div class="concept concept--blue"><div class="concept__h"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="m2 12 10 5 10-5"/></svg></span><b>Belonging edges</b></div><p>“Part of” relationships, this task belongs to that project, this note to that contract.</p></div>
+ <div class="concept concept--gold"><div class="concept__h"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span><b>Dependency edges</b></div><p>“Depends on” relationships, this draft depends on that decision, this answer on that source.</p></div>
+ </div>
+ </div>
+ <div class="reveal panel">
+ <div class="kviz">
+ <div class="kviz__cap">KISS: one store, not a dozen tables</div>
+ <div class="kmany">
+ <span class="kbit"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>users</span>
+ <span class="kbit"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>documents</span>
+ <span class="kbit"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>sessions</span>
+ <span class="kbit"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>configs</span>
+ <span class="kbit"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>decisions</span>
+ <span class="kbit"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>embeddings</span>
+ <span class="kbit"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>bespoke queries</span>
+ </div>
+ <div class="kmerge"><span class="ln"></span> collapse into <span class="ln"></span></div>
+ <div class="kone kone--blue">
+ <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></span>
+ <div><b>nodes + edges + pgvector</b><span>One registration and retrieval mechanism for everything, no specialized tables or bespoke queries to maintain.</span></div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div class="reveal" style="margin-top:44px">
+ <div class="eyebrow c-amber" style="margin-bottom:22px">Universal capture &middot; universal retrieval</div>
+ <div class="flow3">
+ <div class="flow3__box">
+ <span class="flow3__cap">Any input</span>
+ <ul><li>documents &amp; policy</li><li>decisions &amp; state</li><li>messages &amp; config</li><li>code &amp; records</li></ul>
+ </div>
+ <div class="flow3__arr"><span>universal capture</span><i>&rarr;</i></div>
+ <div class="flow3__box flow3__box--core">
+ <b>nodes + edges</b><em>PostgreSQL &middot; pgvector</em>
+ <p style="margin-top:8px;font-size:.84rem">One store. No specialized tables.</p>
+ </div>
+ <div class="flow3__arr"><span>universal retrieval</span><i>&rarr;</i></div>
+ <div class="flow3__box">
+ <span class="flow3__cap">Any output</span>
+ <ul><li>relevant context</li><li>semantic search</li><li>work reconstruction</li><li>graph traversal</li></ul>
+ </div>
+ </div>
+ </div>
+
+ <div class="grid grid--legend reveal" style="margin-top:40px">
+ <div class="legend">
+ <div class="legend__dot" style="background:var(--oro)"></div>
+ <h4>Persistent</h4>
+ <p>Identity, configuration, and policy, the rules that hold across every session.</p>
+ </div>
+ <div class="legend">
+ <div class="legend__dot" style="background:var(--azzurro-lite)"></div>
+ <h4>Situational</h4>
+ <p>What's true right now, the active task, the conversation in progress.</p>
+ </div>
+ <div class="legend">
+ <div class="legend__dot" style="background:var(--ciano)"></div>
+ <h4>Episodic</h4>
+ <p>What happened, past sessions, crystallized into memory the system can recall.</p>
+ </div>
+ <div class="legend">
+ <div class="legend__dot" style="background:var(--viola)"></div>
+ <h4>Documental</h4>
+ <p>What you fed it, source documents and policy, parsed and embedded for retrieval.</p>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="section section--bordered" id="how">
+ <div class="container">
+ <div class="section__head reveal">
+ <div class="eyebrow c-cyan">How it works</div>
+ <h2>From a request to a controlled result.</h2>
+ <p class="lead">
+ Every request moves through the same operational path. The model-routing and context layers run
+ today; connector and approval coverage is in active development.
+ </p>
+ </div>
+ <div class="pipe reveal">
+ <span>Ask</span><i>&rarr;</i>
+ <span>Classify</span><i>&rarr;</i>
+ <span>Retrieve</span><i>&rarr;</i>
+ <span>Route model</span><i>&rarr;</i>
+ <span>Call tools</span><i>&rarr;</i>
+ <span>Validate</span><i>&rarr;</i>
+ <span class="h">Approve</span><i>&rarr;</i>
+ <span>Ledger</span>
+ </div>
+ <div class="steps reveal">
+ <div class="step"><div class="step__num"></div><div><h3>Ask in plain language</h3><p>The operator states the task through a single chat interface, no jumping between consoles.</p></div></div>
+ <div class="step"><div class="step__num"></div><div><h3>Classify the task</h3><p>The runtime reads what kind of work it is and how much it matters: routine, ambiguous, or high-consequence.</p></div></div>
+ <div class="step"><div class="step__num"></div><div><h3>Retrieve context</h3><p>Relevant project state, prior decisions, and documents are pulled from the knowledge graph and retrieval layer.</p></div></div>
+ <div class="step"><div class="step__num"></div><div><h3>Select model &amp; provider</h3><p>It picks the cheapest sufficient model, local, open-source, or low-cost, and reserves premium models for tasks that need them.</p></div></div>
+ <div class="step"><div class="step__num"></div><div><h3>Call tools when needed</h3><p>Where the task requires it, the runtime invokes connected tools and systems through a controlled integration layer.</p></div></div>
+ <div class="step"><div class="step__num"></div><div><h3>Validate the output</h3><p>Results are checked against cost, risk, and consequence before they are treated as usable, not accepted blindly.</p></div></div>
+ <div class="step step--human"><div class="step__num"></div><div><h3>Approve if risk is high</h3><p>Irreversible, external, or high-impact actions pause for explicit human sign-off. Nothing destructive happens on its own.</p></div></div>
+ <div class="step"><div class="step__num"></div><div><h3>Write stabilized state</h3><p>Only decisions worth keeping are persisted to an operational ledger, so the next session reconstructs work instead of restarting it.</p></div></div>
+ </div>
+ </div>
+</section>
+
+<!-- ============ UNIVERSAL CHAT INTERFACE ============ -->
+<section class="section section--bordered" id="interface">
+ <div class="container">
+ <div class="section__head reveal">
+ <div class="eyebrow c-cyan">Universal chat interface</div>
+ <h2>Connect a system. Operate it from chat.</h2>
+ <p class="lead">
+ Instead of logging into ten different tools, the goal is to work from one conversational surface
+ that reaches into the systems you connect. Connector support is in active development; the examples
+ below show the workflows OFFICINA is being built to run.
+ </p>
+ </div>
+ <div class="examples reveal">
+ <div class="ex"><b><span class="ico"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/></svg></span>CRM</b><p><span class="q">"Summarize the accounts at risk this week"</span>, pull customer state and surface what needs attention.</p></div>
+ <div class="ex"><b><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span>ERP</b><p><span class="q">"Review open invoices and prepare follow-ups"</span>, read records, draft, hold for approval before sending.</p></div>
+ <div class="ex"><b><span class="ico"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg></span>Email</b><p><span class="q">"Reply to the supplier using the contract"</span>, draft grounded in the right documents, not guesswork.</p></div>
+ <div class="ex"><b><span class="ico"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></span>Database</b><p><span class="q">"Query sales by product, then analyze"</span>, run the read, return the result and a summary.</p></div>
+ <div class="ex"><b><span class="ico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg></span>Documents / RAG</b><p><span class="q">"Use the internal policy to answer this"</span>, retrieve from your own material and answer from it.</p></div>
+ <div class="ex"><b><span class="ico"><svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 0 0-1-2.6c3-.3 6-1.5 6-6.5a5 5 0 0 0-1.4-3.5 4.6 4.6 0 0 0-.1-3.5s-1.1-.3-3.5 1.3a12 12 0 0 0-6.5 0C6.6 1.7 5.5 2 5.5 2a4.6 4.6 0 0 0-.1 3.5A5 5 0 0 0 4 9c0 5 3 6.2 6 6.5a3.4 3.4 0 0 0-1 2.6V22"/></svg></span>GitHub</b><p><span class="q">"Analyze the issue, change code, open a PR"</span>, read the repo, propose changes, leave merge to a human.</p></div>
+ </div>
+ <p class="mono reveal" style="margin-top:24px;font-size:.84rem;color:var(--text3);max-width:700px">
+ Integration approach, MCP-oriented tool connectors plus provider abstraction, so adding a new system
+ is a connector, not a rewrite.
+ </p>
+ </div>
+</section>
+
+<!-- ============ OPERATIONAL CORE ============ -->
+<section class="section section--bordered">
+ <div class="container">
+ <div class="section__head reveal">
+ <div class="eyebrow c-amber">The operational core</div>
+ <h2>Three things that make AI work reliable.</h2>
+ <p class="lead">Cost control, continuity, and controlled actions, the parts most "AI apps" leave out.</p>
+ </div>
+ <div class="grid grid--3 reveal">
+ <div class="card card--gold">
+ <div class="card__icon ico"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M6 9v6"/><path d="M18 6h-5a4 4 0 0 0-4 4v8"/><path d="m15 9 3-3-3-3"/></svg></div>
+ <h3>Cost-aware model routing</h3>
+ <p>Designed to use the cheapest model that's safe for a task and escalate to premium only when
+ consequence or complexity calls for it. A cascading fallback chain, cloud through to a fully
+ local model, runs today.</p>
+ <div class="card__meta">Live: fallback chain · Building: cost policy</div>
+ </div>
+ <div class="card card--violet">
+ <div class="card__icon ico"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></div>
+ <h3>Operational continuity</h3>
+ <p>An operational ledger keeps only stabilized state, what's needed to reconstruct work, and
+ deliberately forgets transient thinking. Stored as nodes and edges in the same graph, so
+ long-running workflows survive across sessions.</p>
+ <div class="card__meta">Live: ledger continuity</div>
+ </div>
+ <div class="card card--blue">
+ <div class="card__icon ico"><svg viewBox="0 0 24 24"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="m2 12 10 5 10-5"/><path d="m2 17 10 5 10-5"/></svg></div>
+ <h3>Tool orchestration</h3>
+ <p>OFFICINA doesn't just call tools, it coordinates permissions, validation, risk, and
+ consequence. Actions on real systems are controlled, not automatic chaos.</p>
+ <div class="card__meta">Building: permissions &amp; approvals</div>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- ============ PRINCIPLES (KISS + MDI+) ============ -->
+<section class="section section--bordered" id="principles">
+ <div class="container">
+ <div class="section__head reveal">
+ <div class="eyebrow c-amber">Governing principles</div>
+ <h2>Simple on purpose, so it adapts.</h2>
+ <p class="lead">
+ KISS here isn't minimalism for its own sake. Reducing each problem to one basic mechanism is
+ exactly what lets one small system adapt to many scenarios, without building, deploying, and
+ operating something specialized for each.
+ </p>
+ </div>
+ <div class="grid grid--3 reveal">
+ <div class="card card--gold">
+ <div class="card__icon ico"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg></div>
+ <h3>One interface, not many menus</h3>
+ <p>A single conversational surface drives every tool and scenario, instead of specialized menus
+ that are hard to develop, deploy, and operate.</p>
+ </div>
+ <div class="card card--blue">
+ <div class="card__icon ico"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></div>
+ <h3>One schema, not many tables</h3>
+ <p>A single nodes-and-edges store handles all registration and retrieval, instead of many
+ specialized tables and the bespoke queries that come with them.</p>
+ </div>
+ <div class="card card--violet">
+ <div class="card__icon ico"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M6 9v6"/><path d="M18 6h-5a4 4 0 0 0-4 4v8"/><path d="m15 9 3-3-3-3"/></svg></div>
+ <h3>One model mechanism, not per-model wiring</h3>
+ <p>One routing mechanism resolves model choice automatically, instead of implementing and
+ selecting each model by hand for every task.</p>
+ </div>
+ </div>
+ <div class="mdi reveal">
+ <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></span>
+ <div>
+ <h3>MDI+, maximum information density, structured</h3>
+ <p>Every node stores the smallest operationally-complete unit of information, in a structured,
+ consistent form. Less noise to process means cheaper inference and far more precise retrieval -
+ density and structure are what make a deliberately simple design efficient at scale.</p>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- ============ USE CASES ============ -->
+<section class="section section--bordered" id="usecases">
+ <div class="container">
+ <div class="section__head reveal">
+ <div class="eyebrow c-blue">Use cases</div>
+ <h2>What it's built for.</h2>
+ <p class="lead">Built for technical builders and operating teams that need advanced AI workflows without enterprise budgets or vendor lock-in.</p>
+ </div>
+ <div class="grid grid--3 reveal">
+ <div class="uc"><h3><span class="ico"><svg viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></span>AI-assisted software</h3><p>Read issues, change code, prepare PRs, and review, with project memory across the work, not one prompt at a time.</p></div>
+ <div class="uc"><h3><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-3"/></svg></span>Small-business ops</h3><p>Drive CRM, email, and admin workflows from chat, with human approval on anything that leaves the building.</p></div>
+ <div class="uc"><h3><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span>ERP &amp; back-office</h3><p>Read records, draft follow-ups, and prepare actions for a person to confirm, instead of manual data shuffling.</p></div>
+ <div class="uc"><h3><span class="ico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg></span>Document &amp; RAG</h3><p>Answer from internal policy, contracts, and source material, grounded retrieval, not hallucinated guesses.</p></div>
+ <div class="uc"><h3><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span>Founder &amp; product ops</h3><p>Keep decisions, context, and state coherent across many small projects without a dedicated ops team.</p></div>
+ <div class="uc"><h3><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>Cost-controlled adoption</h3><p>Get advanced AI into a small team's workflow while keeping premium-model spend deliberate and bounded.</p></div>
+ </div>
+ </div>
+</section>
+
+<!-- ============ DIFFERENTIATION ============ -->
+<section class="section section--bordered" id="differentiation">
+ <div class="container">
+ <div class="section__head reveal">
+ <div class="eyebrow">Differentiation</div>
+ <h2>Known ideas: composed in a way that is new.</h2>
+ <p class="lead">
+ None of the building blocks are exotic. The contribution is the composition: assembling proven
+ ideas into one coherent runtime where each reinforces the others, instead of living in separate
+ tools that never share state.
+ </p>
+ </div>
+ <div class="concepts concepts--2 reveal">
+ <div class="concept concept--gold"><div class="concept__h"><b>Knowledge graphs → as the only substrate</b></div><p>Graphs are well understood. OFFICINA makes one nodes-and-edges store the <em>single</em> substrate for memory <em>and</em> live configuration, so remembering and configuring become the same operation.</p></div>
+ <div class="concept concept--cyan"><div class="concept__h"><b>Model routing → governed by cost and consequence</b></div><p>Routing exists everywhere. Here it is driven by an explicit cost/risk policy, with a fallback chain that ends in a fully local model, resilience and spend control in one mechanism.</p></div>
+ <div class="concept concept--blue"><div class="concept__h"><b>Human-in-the-loop → as a structural boundary</b></div><p>Approval gates are common. OFFICINA makes them structural: a hard read/write line between an operational surface and a configuration plane, so high-impact actions cannot slip through.</p></div>
+ <div class="concept concept--violet"><div class="concept__h"><b>Information density → as an operating discipline</b></div><p>Summarization is routine. MDI+ turns it into a rule: every node is the smallest operationally-complete, structured unit, cutting inference cost and sharpening retrieval at the same time.</p></div>
+ </div>
+ <div class="diff reveal" style="margin-top:20px">
+ <div class="diff__row diff__head"><div class="diff__a">Typical approach</div><div class="diff__b">With OFFICINA</div></div>
+ <div class="diff__row"><div class="diff__a">A chatbot answers questions</div><div class="diff__b">Executes work across connected systems and keeps the state</div></div>
+ <div class="diff__row"><div class="diff__a">Isolated agents act without oversight</div><div class="diff__b">High-risk and irreversible actions wait for human approval</div></div>
+ <div class="diff__row"><div class="diff__a">Single-provider apps lock you to one model</div><div class="diff__b">Provider abstraction across local, open-source, low-cost, premium</div></div>
+ <div class="diff__row"><div class="diff__a">Many specialized tables and queries</div><div class="diff__b">One nodes-and-edges store for all registration and retrieval</div></div>
+ <div class="diff__row"><div class="diff__a">Manual workflow across tools loses context</div><div class="diff__b">One interface plus a ledger that reconstructs long-running work</div></div>
+ </div>
+ </div>
+</section>
+
+<!-- ============ ARCHITECTURE ============ -->
+<section class="section section--bordered" id="architecture">
+ <div class="container">
+ <div class="section__head reveal">
+ <div class="eyebrow c-violet">Architecture &amp; technology</div>
+ <h2>A small, portable, cloud-ready stack.</h2>
+ <p class="lead">
+ Built on proven open components and a provider-abstraction layer, packaged to run anywhere from a
+ single machine to cloud and GPU infrastructure.
+ </p>
+ </div>
+ <div class="reveal" style="margin-bottom:34px">
+ <div class="eyebrow c-violet" style="margin-bottom:22px">Framework map</div>
+ <div class="fmap">
+ <div class="fmap__layer">
+ <span class="fmap__tag">Interface</span>
+ <div class="fmap__blocks">
+ <div>Operational surface<small>React, where the work happens (read-only on system state)</small></div>
+ <div>Control plane<small>where the system is configured</small></div>
+ </div>
+ </div>
+ <div class="fmap__down">&darr;</div>
+ <div class="fmap__layer">
+ <span class="fmap__tag">Runtime</span>
+ <div class="fmap__blocks">
+ <div>FastAPI cognitive engine<small>classify &middot; route &middot; validate &middot; orchestrate &middot; inject context</small></div>
+ </div>
+ </div>
+ <div class="fmap__down">&darr;</div>
+ <div class="fmap__layer fmap__layer--core">
+ <span class="fmap__tag">Core substrate</span>
+ <div class="fmap__blocks">
+ <div class="fmap__core">PostgreSQL &mdash; nodes + edges + pgvector<small>universal capture &amp; universal retrieval &middot; one store for memory and live configuration</small></div>
+ </div>
+ </div>
+ <div class="fmap__down">&uarr;&darr;</div>
+ <div class="fmap__layer">
+ <span class="fmap__tag">Resources</span>
+ <div class="fmap__blocks">
+ <div>Models<small>cascading fallback chain, cloud to local</small></div>
+ <div>Tools<small>MCP-oriented connectors</small></div>
+ <div>Agents<small>episodic memory &mdash; planned</small></div>
+ </div>
+ </div>
+ </div>
+ </div>
+ <div class="split split--top">
+ <div class="reveal">
+ <div class="card" style="margin-bottom:20px">
+ <h3 style="margin-bottom:14px">Stack</h3>
+ <ul>
+ <li><strong>FastAPI</strong>, cognitive engine, context injection, routing, API.</li>
+ <li><strong>PostgreSQL + pgvector</strong>, structured persistence and vector retrieval in one store.</li>
+ <li><strong>React</strong>, operational interface for AI-native work.</li>
+ <li><strong>Ollama</strong>, local models for offline and low-cost inference.</li>
+ <li><strong>Cloud model providers</strong>, premium and hosted inference via provider abstraction.</li>
+ <li><strong>MCP-oriented integrations</strong>, tools, repositories, and systems as connectors.</li>
+ <li><strong>RAG</strong>, retrieval over your own documents and policy.</li>
+ </ul>
+ </div>
+ <p style="font-family:var(--body);font-size:.92rem;margin-bottom:14px">Cascading inference fallback, if a provider is down, rate-limited, or unreachable, the runtime steps down to the next, ending at a model that needs no network at all.</p>
+ <div class="fallback">
+ <div class="fstep"><span class="fstep__n">01</span><div class="fstep__main"><span class="fstep__name">Vertex · Gemini</span><span class="fstep__role">Primary hosted inference</span></div><span class="fstep__tier tier-primary">Primary</span></div>
+ <div class="fstep"><span class="fstep__n">02</span><div class="fstep__main"><span class="fstep__name">Groq</span><span class="fstep__role">Low-latency alternate</span></div><span class="fstep__tier tier-alt">Alternate</span></div>
+ <div class="fstep"><span class="fstep__n">03</span><div class="fstep__main"><span class="fstep__name">NVIDIA</span><span class="fstep__role">Hosted alternate</span></div><span class="fstep__tier tier-alt">Alternate</span></div>
+ <div class="fstep"><span class="fstep__n">04</span><div class="fstep__main"><span class="fstep__name">OpenRouter</span><span class="fstep__role">Broad model access</span></div><span class="fstep__tier tier-alt">Alternate</span></div>
+ <div class="fstep"><span class="fstep__n">05</span><div class="fstep__main"><span class="fstep__name">Ollama</span><span class="fstep__role">Local, runs with no network</span></div><span class="fstep__tier tier-local">Local</span></div>
+ </div>
+ </div>
+ <div class="reveal">
+ <div class="status">
+ <div class="status__row"><div class="status__k"><span class="dotk dot-live"></span>Live now</div><div class="status__v"><strong>Document pipeline</strong> end to end (upload → parse → chunk → embed → retrieve → chat); single graph holding memory + live config; multi-provider fallback; operational-ledger continuity.</div></div>
+ <div class="status__row"><div class="status__k"><span class="dotk dot-dev"></span>In development</div><div class="status__v"><strong>Cost-aware routing policy</strong>, tool permissions and human-approval flow, model-initiated retrieval, observability surfaces.</div></div>
+ <div class="status__row"><div class="status__k"><span class="dotk dot-plan"></span>Planned</div><div class="status__v"><strong>Connectors</strong> for CRM, ERP, email, and external systems; episodic-memory agents; permanent low-cost production deployment.</div></div>
+ </div>
+ <p class="mono" style="margin-top:16px;font-size:.82rem;color:var(--text3)">Portable by design, packaged to run on a single host, in the cloud, or on GPU infrastructure.</p>
+ </div>
+ </div>
+ </div>
+</section>
+
+<section class="section section--bordered" style="padding-top:0;border-top:none">
+ <div class="container">
+ <div class="note reveal">
+ <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></svg></span>
+ <div>
+ <h3>Packaged deploy &mdash; one bundle, many targets</h3>
+ <p>The whole runtime packages into a single bundle that stands up the same way on a laptop, one
+ server, or cloud and GPU infrastructure. No per-environment rebuild, the same system, many
+ scenarios, which is what makes adoption (and evaluation on a cloud partner) low-friction.</p>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- ============ CLOUD / WHERE CREDITS GO ============ -->
+<section class="section section--bordered" id="cloud">
+ <div class="container">
+ <div class="section__head reveal">
+ <div class="eyebrow c-verde">Cloud infrastructure</div>
+ <h2>Where cloud support goes.</h2>
+ <p class="lead">
+ OFFICINA is built to run on standard cloud primitives. Credits and infrastructure support directly
+ accelerate the runtime, here's concretely where they'd be used.
+ </p>
+ </div>
+ <div class="grid grid--2 reveal">
+ <div class="card card--blue">
+ <h3 style="margin-bottom:14px">What we run on the cloud</h3>
+ <ul>
+ <li><strong>Managed PostgreSQL + pgvector</strong>, the graph and vector store at production scale.</li>
+ <li><strong>GPU inference</strong>, evaluating local and open-source models against premium baselines.</li>
+ <li><strong>Container hosting</strong>, the FastAPI runtime and React interface, always-on.</li>
+ <li><strong>Object storage</strong>, document tiers feeding the RAG pipeline.</li>
+ <li><strong>CDN + edge</strong>, serving the operational interface to small teams anywhere.</li>
+ </ul>
+ </div>
+ <div class="card card--gold">
+ <h3 style="margin-bottom:14px">Why a cloud partner benefits</h3>
+ <ul>
+ <li>Encourages responsible, deliberate use of premium and cloud AI rather than blanket spend.</li>
+ <li>Drives real evaluation workloads across inference, databases, storage, and GPU.</li>
+ <li>Supports an AI-native developer ecosystem built on open components.</li>
+ <li>Helps small teams adopt AI safely and cost-effectively, a large, underserved segment.</li>
+ </ul>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- ============ STAGE + WHO ============ -->
+<section class="section section--bordered" id="stage">
+ <div class="container">
+ <div class="split">
+ <div class="reveal">
+ <div class="eyebrow c-amber">Current stage</div>
+ <h2>Early, open, and actively built.</h2>
+ <p class="lead">
+ OFFICINA is in early bootstrap development, with a public open-source repository, a defined
+ architecture and roadmap, operational documentation, and working design around model routing,
+ tool orchestration, and operational continuity.
+ </p>
+ <p style="margin-top:14px;font-family:var(--body)">
+ The next step is to expand the runtime, evaluate model-routing policies, build a practical
+ developer interface, and test workflows across local, open-source, low-cost, premium, cloud, and
+ GPU-accelerated models. We're seeking cloud and startup-program support to accelerate that.
+ </p>
+ <div class="actions" style="margin-top:26px">
+ <a href="https://github.com/pierangelopirro/officina" data-repo class="btn btn--gold" target="_blank" rel="noopener">Explore the repository <span class="btn--arrow">→</span></a>
+ </div>
+ </div>
+ <div class="reveal">
+ <div class="card">
+ <h3 style="margin-bottom:6px">Who's building it</h3>
+ <p style="font-size:.94rem">OFFICINA is designed and built by its founders, working session by session with a disciplined, documented method, the public open-source repository is the running record of that work.</p>
+ <h3 style="margin:22px 0 10px">Who it's for</h3>
+ <div class="chips">
+ <span class="chip">Solo developers</span>
+ <span class="chip">Technical founders</span>
+ <span class="chip">Startups</span>
+ <span class="chip">SMBs</span>
+ <span class="chip">Software teams</span>
+ <span class="chip">Open-source builders</span>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+</section>
+
+<!-- ============ CTA / CONTACT ============ -->
+<section class="section" id="contact">
+ <div class="container">
+ <div class="cta reveal">
+ <div class="eyebrow">Open-source · AI-native infrastructure</div>
+ <h2>Infrastructure for the next generation of AI-native work.</h2>
+ <p class="lead">
+ OFFICINA is being built to help small teams run reliable human-AI systems that remember what
+ matters, forget what shouldn't persist, and escalate only when needed. If you're a cloud or
+ startup-program partner, a builder, or just want to compare notes, get in touch.
+ </p>
+ <div class="actions">
+ <a href="https://github.com/pierangelopirro/officina" data-repo class="btn btn--primary" target="_blank" rel="noopener">View the repository <span class="btn--arrow">→</span></a>
+ <a href="mailto:officina@ioblu.com" class="btn btn--ghost">officina@ioblu.com</a>
+ </div>
+ <p class="cta__foot">PP Consultoria · Panama City, Panamá</p>
+ </div>
+ </div>
+</section>
+
+<footer class="footer">
+ <div class="container">
+ <div class="footer__grid">
+ <div class="footer__brand">
+ <div class="nav__brand">officina</div>
+ <p>Open-source AI-native runtime for cost-aware, multi-model operational workflows. The right
+ model, the right tool, and the right level of validation for each task.</p>
+ </div>
+ <div class="footer__links">
+ <div class="footer__col">
+ <h4>Product</h4>
+ <a href="#problem">Problem</a>
+ <a href="#platform">Platform</a>
+ <a href="#how">How it works</a>
+ <a href="#architecture">Architecture</a>
+ <a href="#cloud">Cloud</a>
+ </div>
+ <div class="footer__col">
+ <h4>Project</h4>
+ <a href="#stage">Current stage</a>
+ <a href="https://github.com/pierangelopirro/officina" data-repo target="_blank" rel="noopener">GitHub ↗</a>
+ <a href="mailto:officina@ioblu.com">Contact</a>
+ </div>
+ </div>
+ </div>
+ <div class="footer__legal">
+ <p class="smallprint">
+ OFFICINA is an open-source project by PP Consultoria, Panama City, Panamá, released under an
+ open-source license, see the <a href="https://github.com/pierangelopirro/officina" data-repo target="_blank" rel="noopener">repository</a> for terms.
+ Product previews, diagrams, and the chat interface shown on this page are illustrative; capabilities
+ marked “in development” or “planned” are not yet generally available and are described as the
+ direction OFFICINA is being built toward. This site collects no personal data, sets no tracking
+ cookies, and runs no analytics, contact is by email only. Third-party names and marks
+ (PostgreSQL, Vertex AI, Gemini, Groq, NVIDIA, OpenRouter, Ollama and others) belong to their
+ respective owners and are referenced for descriptive purposes only.
+ </p>
+ </div>
+ <div class="footer__bottom">
+ <small>© 2026 OFFICINA · PP Consultoria</small>
+ <small>AI-native infrastructure for cost-aware multi-model workflows.</small>
+ </div>
+ </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+ /* === CHANGE THIS when the public repo is ready (e.g. https://github.com/officina-systems/officina) === */
+ var REPO_URL = "https://github.com/pierangelopirro/officina";
+ document.querySelectorAll('a[data-repo]').forEach(function(a){a.setAttribute('href',REPO_URL);});
+ var nav=document.querySelector('.nav');
+ function onScroll(){nav.classList.toggle('is-scrolled',window.scrollY>8);}
+ onScroll(); window.addEventListener('scroll',onScroll,{passive:true});
+ var toggle=document.querySelector('.nav__toggle'), links=document.querySelector('.nav__links');
+ if(toggle&&links){
+ toggle.addEventListener('click',function(){links.classList.toggle('is-open');});
+ links.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){links.classList.remove('is-open');});});
+ }
+ var items=document.querySelectorAll('.reveal');
+ if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+ items.forEach(function(el){el.classList.add('visible');});
+ }else{
+ var obs=new IntersectionObserver(function(entries){
+ entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+ },{threshold:0.1,rootMargin:'0px 0px -60px 0px'});
+ items.forEach(function(el){obs.observe(el);});
+ }
+ /* graph canvas */
+ var COLORS=['#c9a23a','#3b82d4','#47bfff','#863bff'];
+ var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ document.querySelectorAll('.graph-canvas').forEach(function(canvas){new GraphField(canvas,reduced);});
+
+ function GraphField(canvas,reduced){
+ this.canvas=canvas; this.ctx=canvas.getContext('2d'); this.reduced=reduced;
+ this.density=parseFloat(canvas.dataset.density||'1'); this.maxDist=150; this.lastPulse=0;
+ this.nodes=[]; this.pulses=[];
+ var self=this;
+ this.resize(); this.seed();
+ window.addEventListener('resize',function(){self.resize();self.seed();});
+ if(reduced){this.draw();}else{this.frame=this.frame.bind(this);requestAnimationFrame(this.frame);}
+ }
+ GraphField.prototype.resize=function(){
+ var r=this.canvas.getBoundingClientRect(), dpr=Math.min(window.devicePixelRatio||1,2);
+ this.w=r.width; this.h=r.height;
+ this.canvas.width=Math.max(1,Math.round(this.w*dpr)); this.canvas.height=Math.max(1,Math.round(this.h*dpr));
+ this.ctx.setTransform(dpr,0,0,dpr,0,0);
+ };
+ GraphField.prototype.seed=function(){
+ var area=Math.max(this.w*this.h,1), count=Math.round((area/19000)*this.density);
+ count=Math.max(10,Math.min(46,count)); this.nodes=[];
+ for(var i=0;i<count;i++){
+ var type=Math.floor(Math.random()*COLORS.length);
+ this.nodes.push({x:Math.random()*this.w,y:Math.random()*this.h,vx:(Math.random()-0.5)*0.16,vy:(Math.random()-0.5)*0.16,r:2+Math.random()*2.6,type:type,color:COLORS[type]});
+ }
+ this.pulses=[];
+ };
+ GraphField.prototype.frame=function(){this.step();this.draw();requestAnimationFrame(this.frame);};
+ GraphField.prototype.step=function(){
+ for(var i=0;i<this.nodes.length;i++){var n=this.nodes[i];n.x+=n.vx;n.y+=n.vy;
+ if(n.x<0||n.x>this.w)n.vx*=-1; if(n.y<0||n.y>this.h)n.vy*=-1;
+ n.x=Math.min(Math.max(n.x,0),this.w); n.y=Math.min(Math.max(n.y,0),this.h);}
+ var now=performance.now();
+ if(now-this.lastPulse>850+Math.random()*850){this.spawnPulse();this.lastPulse=now;}
+ this.pulses=this.pulses.filter(function(p){p.t+=0.016;return p.t<1;});
+ };
+ GraphField.prototype.spawnPulse=function(){
+ var c=[];
+ for(var i=0;i<this.nodes.length;i++)for(var j=i+1;j<this.nodes.length;j++){
+ var a=this.nodes[i],b=this.nodes[j],dx=a.x-b.x,dy=a.y-b.y;
+ if(Math.sqrt(dx*dx+dy*dy)<this.maxDist)c.push([a,b]);
+ }
+ if(!c.length)return;
+ var pair=c[Math.floor(Math.random()*c.length)], from=Math.random()<0.5?pair[0]:pair[1], to=from===pair[0]?pair[1]:pair[0];
+ this.pulses.push({from:from,to:to,t:0,color:from.color});
+ };
+ GraphField.prototype.draw=function(){
+ var ctx=this.ctx,nodes=this.nodes,pulses=this.pulses;
+ ctx.clearRect(0,0,this.w,this.h); ctx.lineWidth=1;
+ for(var i=0;i<nodes.length;i++)for(var j=i+1;j<nodes.length;j++){
+ var a=nodes[i],b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
+ if(d<this.maxDist){
+ var isDependency=((i*7+j*13)%11)===0;
+ if(isDependency){
+ ctx.save();ctx.setLineDash([5,4]);ctx.lineWidth=1.2;
+ ctx.strokeStyle='rgba(201,162,58,'+(0.18+(1-d/this.maxDist)*0.4)+')';
+ ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.restore();
+ }else{
+ ctx.lineWidth=1;ctx.strokeStyle='rgba(233,237,245,'+((1-d/this.maxDist)*0.16)+')';
+ ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+ }
+ }
+ }
+ for(var k=0;k<nodes.length;k++){var n=nodes[k];ctx.beginPath();ctx.fillStyle=n.color;ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fill();}
+ ctx.shadowBlur=0;
+ for(var p=0;p<pulses.length;p++){var pu=pulses[p],x=pu.from.x+(pu.to.x-pu.from.x)*pu.t,y=pu.from.y+(pu.to.y-pu.from.y)*pu.t;
+ ctx.globalAlpha=Math.sin(pu.t*Math.PI);ctx.fillStyle=pu.color;ctx.beginPath();ctx.arc(x,y,2.6,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
+ };
+});
+</script>
+</body>
 </html>
