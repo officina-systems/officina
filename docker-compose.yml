@@ -75,7 +75,7 @@ services:
     depends_on:
       - fastapi
     ports:
-      - "80:80"
+      - "8080:80"
     networks:
       - officina_default
     restart: unless-stopped
